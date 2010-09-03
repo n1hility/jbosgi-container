@@ -302,7 +302,7 @@ public abstract class AbstractUserBundle extends AbstractBundle
             bundleManager.deleteContentRoot(contentRoot);
          }
       }
-      clearRevisions();
+      clearOldRevisions();
 
       // Update the resolver module for the current revision
       currentRev.refreshRevision(this, getOSGiMetaData());

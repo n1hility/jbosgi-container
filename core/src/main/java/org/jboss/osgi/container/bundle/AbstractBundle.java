@@ -200,7 +200,14 @@ public abstract class AbstractBundle implements Bundle
 
    public String getCanonicalName()
    {
-      return getSymbolicName() + ":" + getVersion();
+      try
+      {
+         return getSymbolicName() + ":" + getVersion();
+      }
+      catch (IllegalStateException ise)
+      {
+         return getSymbolicName() + "[uninstalled]";
+      }
    }
 
    public boolean isResolved()
@@ -254,8 +261,11 @@ public abstract class AbstractBundle implements Bundle
       revisions.add(0, rev);
    }
 
-   AbstractRevision getCurrentRevision()
+   public AbstractRevision getCurrentRevision()
    {
+      if (revisions.size() < 1)
+         throw new IllegalStateException("The bundle is uninstalled.");
+
       return revisions.get(0);
    }
 
@@ -266,8 +276,13 @@ public abstract class AbstractBundle implements Bundle
 
    public void clearRevisions()
    {
-      AbstractRevision rev = getCurrentRevision();
       revisions.clear();
+   }
+
+   public void clearOldRevisions()
+   {
+      AbstractRevision rev = getCurrentRevision();
+      clearRevisions();
       revisions.add(rev);
    }
 
